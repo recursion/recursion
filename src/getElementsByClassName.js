@@ -7,9 +7,16 @@
 var getElementsByClassName = function(className){
   //  traverse document.body.childNodes searching through classList for our className
   //  something like....
-  //  for (var i = 0; i < document.body.childNodes.length; i++) {
-  //    if (className in document.body.childNodes[i]) {
-  //      return document.body.childNodes[i];
-  //    }
-  //  }
+  var baseNode;
+  if (!arguments[1]) {
+    baseNode = document.body;
+  } else {
+    baseNode = arguments[1];
+  }
+  for (var i = 0; i < baseNode.childNodes.length; i++) {
+    if (baseNode.classList.contains(className)) {
+      return baseNode;
+    }
+    getElementsByClassName(className, baseNode.childNodes[i]);
+  }
 };
