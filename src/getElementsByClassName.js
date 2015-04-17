@@ -4,29 +4,18 @@
 // };
 
 // But instead we're going to implement it from scratch:
-var getElementsByClassName = function(className, result){
-  //  traverse document.body.childNodes searching through classList for our className
-  //  something like....
+var getElementsByClassName = function(className){
+  // lets see if we can just traverse the entire dom.
 
-  if (result === undefined) {
-    result = [];
-  }
-
-  var baseNode;
-
-console.log(arguments[2]);
-  if (!arguments[2]) {
-    baseNode = document.body;
+  var element;
+  if (!arguments[1]) {
+    element = document.body;
   } else {
-    baseNode = arguments[2];
+    element = arguments[1];
   }
-  for (var i = 0; i < baseNode.childNodes.length; i++) {
-    if (baseNode.classList.contains(className)) {
-      console.log('Chunka: ' + i, baseNode);
-      result.push(baseNode);
-    }
 
-    getElementsByClassName(className, result, baseNode.childNodes[i]);
+  for (var i = 0; i < element.childNodes.length; i++) {
+    console.log('ELEMENT: ', element);
+    console.log('CHILD ELEMENT: ', element.childNodes[i]);
   }
-    return result;
 };
