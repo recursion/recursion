@@ -4,29 +4,30 @@
 // };
 
 // But instead we're going to implement it from scratch:
-var getElementsByClassName = function(className){
+var getElementsByClassName = function(className, result){
   // lets see if we can just traverse the entire dom.
 
-  var result = [];
+  if (result === undefined) {
+    result = [];
+  }
 
   var element;
-  if (!arguments[1]) {
+  if (!arguments[2]) {
     element = document.body;
   } else {
-    element = arguments[1];
+    element = arguments[2];
   }
 
-  if (element.classList.contains(className)) {
-    result.push(element);
-  }
-  for (var i = 0; i < element.childNodes.length; i++) {
-    if (element.childNodes[i].classList) {
-      if (element.childNodes[i].classList.contains(className)) {
-        console.log(element.childNodes[i]);
-        result.push(element.childNodes[i]);
-      }
+  if(element.classList) {
+    if (element.classList.contains(className)) {
+      result.push(element);
     }
   }
-  console.log('RESULT: ', result);
+
+  for (var i = 0; i < element.childNodes.length; i++) {
+    getElementsByClassName(className, result, element.childNodes[i]);
+  }
+
   return result;
+
 };
