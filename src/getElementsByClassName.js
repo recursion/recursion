@@ -7,6 +7,8 @@
 var getElementsByClassName = function(className){
   // lets see if we can just traverse the entire dom.
 
+  var result = [];
+
   var element;
   if (!arguments[1]) {
     element = document.body;
@@ -14,8 +16,17 @@ var getElementsByClassName = function(className){
     element = arguments[1];
   }
 
-  for (var i = 0; i < element.childNodes.length; i++) {
-    console.log('ELEMENT: ', element);
-    console.log('CHILD ELEMENT: ', element.childNodes[i]);
+  if (element.classList.contains(className)) {
+    result.push(element);
   }
+  for (var i = 0; i < element.childNodes.length; i++) {
+    if (element.childNodes[i].classList) {
+      if (element.childNodes[i].classList.contains(className)) {
+        console.log(element.childNodes[i]);
+        result.push(element.childNodes[i]);
+      }
+    }
+  }
+  console.log('RESULT: ', result);
+  return result;
 };
