@@ -5,7 +5,6 @@
 
 // But instead we're going to implement it from scratch:
 var getElementsByClassName = function(className, result){
-  // lets see if we can just traverse the entire dom.
 
   if (result === undefined) {
     result = [];
