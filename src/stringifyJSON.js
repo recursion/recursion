@@ -8,7 +8,11 @@ var stringifyJSON = function(obj) {
   if (Array.isArray(obj)) {
     result = "[";
     for (var i = 0; i < obj.length; i++) {
-      result += stringifyJSON(obj[i]);
+      if (obj[i] !== undefined) {
+        result += stringifyJSON(obj[i]);
+      } else {
+        result += null;
+      }
       if (i < obj.length - 1) {
         result += ",";
       }
