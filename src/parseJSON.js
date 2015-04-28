@@ -26,14 +26,19 @@ var parseJSON = function parseJSON(json) {
             console.log('parseArray returning ', result);
             return result;
           } else if (ch === '"') {
-            console.log('Found a \" in ' + json.slice(at));
             result.push(parse(json.slice(at)));
             console.log('result array is currently set to ', result);
           } else {
             var tmp = parse(json.slice(at));
+            console.log('Interal parse returned: ', tmp);
             if (tmp !== undefined) {
               result.push(tmp);
+              console.log('result array is currently set to ', result);
             }
+          }
+          if (ch === ']') {
+            console.log('parseArray returning ', result);
+            return result;
           }
         }
       }
@@ -54,7 +59,6 @@ var parseJSON = function parseJSON(json) {
       }
       throw new SyntaxError();
     }
-
   };
   var parseWhiteSpace = function parseWhiteSpace() {
     while (ch === ' ') {
@@ -88,6 +92,16 @@ var parseJSON = function parseJSON(json) {
       if (json.slice(at, at+4) === 'null') {
         next();next();next();next();
         return null;
+      }
+    } else if (ch === 'f') {
+      if (json.slice(at, at+5) === 'false') {
+        next();next();next();next();next();
+        return false;
+      }
+    } else if (ch === 't') {
+      if (json.slice(at, at+4) === 'true') {
+        next();next();next();next();
+        return true;
       }
     }
   };
