@@ -24,9 +24,12 @@ var parseJSON = function parseJSON(json) {
           next();
           parseWhiteSpace();
           if (ch === ']') {
+            console.log('parseArray returning ', result);
             return result;
-          } else {
-            result.push(parseJSON(json.slice(at)));
+          } else if (ch === '"') {
+            console.log('Found a \" in ' + json.slice(at));
+            result.push(parseString(json.slice(at)));
+            console.log('result array is currently set to ', result);
           }
         }
       }
@@ -35,10 +38,11 @@ var parseJSON = function parseJSON(json) {
   var parseString = function parseString() {
     var result = '';
     if (ch === '"') {
-      while (at < json.length) {
+      while (at <= json.length) {
         next();
         parseWhiteSpace();
         if (ch === '"') {
+          console.log('parseString returning ', result);
           return result;
         } else {
           result += ch;
@@ -62,14 +66,12 @@ var parseJSON = function parseJSON(json) {
         next();
         parseWhiteSpace();
         if (ch === '}') {
+          console.log('parseobject Returning ', result);
           return result;
         } else if (ch === ':') {
           next();
           parseWhiteSpace();
           result[prop] = parseString();
-        } else if (ch === ',') {
-          next();
-          parseWhiteSpace();
         } else if (ch === '"') {
           // Parse property here
           prop = parseString();
