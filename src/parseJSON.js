@@ -79,9 +79,18 @@ var parseJSON = function parseJSON(json) {
         } else if (ch === ':') {
           next();
           parseWhiteSpace();
-          result[prop] = parseString();
+          var tmp = parse(json.slice(at));
+          console.log('Interal parse returned: ', tmp);
+          if (tmp !== undefined) {
+            console.log('Setting property ', prop, ' to ', tmp);
+            result[prop] = tmp;
+          }
         } else {
           prop = parseString();
+        }
+        if (ch === '}') {
+          console.log('parseobject Returning ', result);
+          return result;
         }
       }
       throw new SyntaxError();
