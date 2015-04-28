@@ -2,8 +2,8 @@
 // var parseJSON = JSON.parse;
 
 // but you're not, so you'll write it from scratch:
-var parseJSON = function(json) {
-  console.log(json);
+var parseJSON = function parseJSON(json) {
+  console.log('parseJSON called with: ' + json);
   var parsedResult; // parse result
   var at = 0;
   var ch = json[at];
@@ -14,7 +14,7 @@ var parseJSON = function(json) {
       ch = json.charAt(at);
       return ch;
     } else {
-      throw 'Error: Invalid Syntax -> End of String.';
+      throw new SyntaxError();
     }
   };
   var parseArray = function parseArray() {
@@ -22,6 +22,7 @@ var parseJSON = function(json) {
       if (ch === '[') {
         while (at < json.length) {
           next();
+          parseWhiteSpace();
           if (ch === ']') {
             return result;
           } else {
@@ -29,33 +30,62 @@ var parseJSON = function(json) {
           }
         }
       }
-      throw 'Error: Invalid Array syntax: Expected ]'
+      throw new SyntaxError('Array closure missing.', 'parseJSON.js', 32);
   };
   var parseString = function parseString() {
     var result = '';
+    if (ch === '"') {
+      while (at < json.length) {
+        next();
+        parseWhiteSpace();
+        if (ch === '"') {
+          return result;
+        } else {
+          result += ch;
+        }
+      }
+      throw new SyntaxError();
+    }
 
   };
-
+  var parseWhiteSpace = function parseWhiteSpace() {
+    while (ch === ' ') {
+      console.log('parsing whitespace.');
+      next();
+    }
+  };
   var parseObject = function parseObject() {
     var result = {};
+    var prop;
     if (ch === '{') {
       while (at < json.length) {
         next();
+        parseWhiteSpace();
         if (ch === '}') {
           return result;
+        } else if (ch === ':') {
+          next();
+          parseWhiteSpace();
+          result[prop] = parseString();
+        } else if (ch === ',') {
+          next();
+          parseWhiteSpace();
         } else if (ch === '"') {
           // Parse property here
-          var str = parseString();
+          prop = parseString();
         }
-      };
+      }
+      throw new SyntaxError();
     }
   };
 
   while (at < json.length) {
     if (ch === '[') {
-      parseArray();
+      parsedResult = parseArray();
     } else if (ch === '{') {
-      parseObject();
+      parsedResult = parseObject();
+    } else if (ch === '"') {
+      parsedResult = parseString();
     }
     next();
   }
