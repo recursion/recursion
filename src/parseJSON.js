@@ -4,7 +4,6 @@
 // but you're not, so you'll write it from scratch:
 var parseJSON = function parseJSON(json) {
   console.log('parseJSON called with: ' + json);
-  var parsedResult; // parse result
   var at = 0;
   var ch = json[at];
 
@@ -28,8 +27,13 @@ var parseJSON = function parseJSON(json) {
             return result;
           } else if (ch === '"') {
             console.log('Found a \" in ' + json.slice(at));
-            result.push(parseString(json.slice(at)));
+            result.push(parse(json.slice(at)));
             console.log('result array is currently set to ', result);
+          } else {
+            var tmp = parse(json.slice(at));
+            if (tmp !== undefined) {
+              result.push(tmp);
+            }
           }
         }
       }
@@ -72,25 +76,40 @@ var parseJSON = function parseJSON(json) {
           next();
           parseWhiteSpace();
           result[prop] = parseString();
-        } else if (ch === '"') {
-          // Parse property here
+        } else {
           prop = parseString();
         }
       }
       throw new SyntaxError();
     }
   };
-
-  while (at < json.length) {
-    if (ch === '[') {
-      parsedResult = parseArray();
-    } else if (ch === '{') {
-      parsedResult = parseObject();
-    } else if (ch === '"') {
-      parsedResult = parseString();
+  var parseWord = function parseWord() {
+    if (ch === 'n') {
+      if (json.slice(at, at+4) === 'null') {
+        next();next();next();next();
+        return null;
+      }
     }
-    next();
-  }
+  };
 
-  return parsedResult;
+  var parse = function parse() {
+    while (at < json.length) {
+      if (ch === ',') {
+        next();
+        parseWhiteSpace();
+      }
+      if (ch === '[') {
+        return parseArray();
+      } else if (ch === '{') {
+        return parseObject();
+      } else if (ch === '"') {
+        return parseString();
+      } else if (ch === 'n' || ch === 't' || ch === 'f') {
+        return parseWord();
+      }
+      next();
+    }
+  };
+
+  return parse();
 };
