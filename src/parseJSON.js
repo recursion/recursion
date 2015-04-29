@@ -3,9 +3,17 @@
 
 // but you're not, so you'll write it from scratch:
 var parseJSON = function parseJSON(json) {
-  console.log('parseJSON called with: ' + json);
+  // console.log('parseJSON called with: ' + json);
   var at = 0;
   var ch = json[at];
+  var escapeChars = {
+    '\\': '\\',
+    '\s': '\s',
+    '\r': '\r',
+    '\t': '\t',
+    '\n': '\n',
+    '"': '"'
+  };
 
   var next = function next(c) {
     if (at < json.length) {
@@ -39,14 +47,7 @@ var parseJSON = function parseJSON(json) {
       }
       throw new SyntaxError('Array closure missing.', 'parseJSON.js', 32);
   };
-  var escapeChars = {
-    '\\': '\\',
-    '\s': '\s',
-    '\r': '\r',
-    '\t': '\t',
-    '\n': '\n',
-    '"': '"'
-  };
+
   var parseString = function parseString() {
     var result = '';
     if (ch === '"') {
