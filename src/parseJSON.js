@@ -49,7 +49,6 @@ var parseJSON = function parseJSON(json) {
     if (ch === '"') {
       while (at <= json.length) {
         next();
-        parseWhiteSpace();
         if (ch === '"') {
           console.log('parseString returning ', result);
           return result;
@@ -88,7 +87,7 @@ var parseJSON = function parseJSON(json) {
         } else {
           prop = parseString();
         }
-        if (ch === '}') {
+        if (ch === '}' && json.charAt(at + 1) !== ',') {
           console.log('parseobject Returning ', result);
           return result;
         }
@@ -115,6 +114,18 @@ var parseJSON = function parseJSON(json) {
     }
   };
 
+  var parseNumber = function parseNumber() {
+    var result = '';
+    while (ch === '-' || ch === '.' || (ch >= 0 && ch <= 9)) {
+      if (ch === ',' || ch === ']' || ch === '}') {
+        return +result;
+      }
+      result += ch;
+      next();
+    }
+    return +result;
+  };
+
   var parse = function parse() {
     while (at < json.length) {
       if (ch === ',') {
@@ -129,6 +140,8 @@ var parseJSON = function parseJSON(json) {
         return parseString();
       } else if (ch === 'n' || ch === 't' || ch === 'f') {
         return parseWord();
+      } else if (ch === '-' || (ch >= 0 && ch <= 9)) {
+        return parseNumber();
       }
       next();
     }
