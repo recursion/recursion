@@ -44,6 +44,11 @@ var parseJSON = function parseJSON(json) {
       }
       throw new SyntaxError('Array closure missing.', 'parseJSON.js', 32);
   };
+  var escapeChars = {
+    '\\': '\\',
+    '\s': '\s',
+    '\"': '"'
+  };
   var parseString = function parseString() {
     var result = '';
     if (ch === '"') {
@@ -52,6 +57,9 @@ var parseJSON = function parseJSON(json) {
         if (ch === '"') {
           console.log('parseString returning ', result);
           return result;
+        } else if (escapeChars[ch]) {
+          console.log('Found escape char: ', escapeChars[ch]);
+          result += escapeChars[ch];
         } else {
           result += ch;
         }
