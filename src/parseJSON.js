@@ -23,21 +23,16 @@ var parseJSON = function parseJSON(json) {
           next();
           parseWhiteSpace();
           if (ch === ']') {
-            console.log('parseArray returning ', result);
             return result;
           } else if (ch === '"') {
             result.push(parse(json.slice(at)));
-            console.log('result array is currently set to ', result);
           } else {
             var tmp = parse(json.slice(at));
-            console.log('Interal parse returned: ', tmp);
             if (tmp !== undefined) {
               result.push(tmp);
-              console.log('result array is currently set to ', result);
             }
           }
           if (ch === ']' && json.charAt(at + 1) !== ',') {
-            console.log('parseArray returning ', result);
             return result;
           }
         }
@@ -49,6 +44,7 @@ var parseJSON = function parseJSON(json) {
     '\s': '\s',
     '\r': '\r',
     '\t': '\t',
+    '\n': '\n',
     '"': '"'
   };
   var parseString = function parseString() {
@@ -57,12 +53,10 @@ var parseJSON = function parseJSON(json) {
       while (at <= json.length) {
         next();
         if (ch === '"') {
-          console.log('parseString returning ', result);
           return result;
         } else if (ch === '\\') {
           next();
           if (typeof escapeChars[ch] === 'string') {
-            console.log('Found escape char: ', escapeChars[ch]);
             result += escapeChars[ch];
           }
         } else {
@@ -74,7 +68,6 @@ var parseJSON = function parseJSON(json) {
   };
   var parseWhiteSpace = function parseWhiteSpace() {
     while (ch === ' ') {
-      console.log('parsing whitespace.');
       next();
     }
   };
@@ -86,23 +79,18 @@ var parseJSON = function parseJSON(json) {
         next();
         parseWhiteSpace();
         if (ch === '}') {
-          console.log('Main Parseobject Returning ', result);
           return result;
         } else if (ch === ':') {
           next();
           parseWhiteSpace();
           var tmp = parse(json.slice(at));
-          console.log('Interal parse returned: ', tmp);
           if (tmp !== undefined) {
-            console.log('Setting property ', prop, ' to ', tmp);
             result[prop] = tmp;
           }
         } else {
           prop = parseString();
         }
         if (ch === '}' && json.charAt(at + 1) !== ',') {
-          console.log('***-> ', json.slice(at + 1));
-          console.log('parseobject Returning ', result);
           return result;
         }
       }
