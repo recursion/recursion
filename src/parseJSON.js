@@ -36,7 +36,7 @@ var parseJSON = function parseJSON(json) {
               console.log('result array is currently set to ', result);
             }
           }
-          if (ch === ']') {
+          if (ch === ']' && json.charAt(at + 1) !== ',') {
             console.log('parseArray returning ', result);
             return result;
           }
@@ -47,6 +47,8 @@ var parseJSON = function parseJSON(json) {
   var escapeChars = {
     '\\': '\\',
     '\s': '\s',
+    '\r': '\r',
+    '\t': '\t',
     '"': '"'
   };
   var parseString = function parseString() {
@@ -84,7 +86,7 @@ var parseJSON = function parseJSON(json) {
         next();
         parseWhiteSpace();
         if (ch === '}') {
-          console.log('parseobject Returning ', result);
+          console.log('Main Parseobject Returning ', result);
           return result;
         } else if (ch === ':') {
           next();
@@ -99,6 +101,7 @@ var parseJSON = function parseJSON(json) {
           prop = parseString();
         }
         if (ch === '}' && json.charAt(at + 1) !== ',') {
+          console.log('***-> ', json.slice(at + 1));
           console.log('parseobject Returning ', result);
           return result;
         }
