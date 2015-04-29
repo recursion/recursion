@@ -91,6 +91,9 @@ var parseJSON = function parseJSON(json) {
         } else {
           prop = parseString();
         }
+        // here is my problem - this allows most tests to pass
+        // but not the final object glob, which ends up having one property
+        // not properly return because its inner object is followed by a ,
         if (ch === '}' && json.charAt(at + 1) !== ',') {
           return result;
         }
