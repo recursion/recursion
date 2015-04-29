@@ -47,7 +47,7 @@ var parseJSON = function parseJSON(json) {
   var escapeChars = {
     '\\': '\\',
     '\s': '\s',
-    '\"': '"'
+    '"': '"'
   };
   var parseString = function parseString() {
     var result = '';
@@ -57,9 +57,12 @@ var parseJSON = function parseJSON(json) {
         if (ch === '"') {
           console.log('parseString returning ', result);
           return result;
-        } else if (escapeChars[ch]) {
-          console.log('Found escape char: ', escapeChars[ch]);
-          result += escapeChars[ch];
+        } else if (ch === '\\') {
+          next();
+          if (typeof escapeChars[ch] === 'string') {
+            console.log('Found escape char: ', escapeChars[ch]);
+            result += escapeChars[ch];
+          }
         } else {
           result += ch;
         }
