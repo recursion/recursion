@@ -2,6 +2,7 @@
 // var parseJSON = JSON.parse;
 
 // but you're not, so you'll write it from scratch:
+//
 var parseJSON = function parseJSON(json) {
   var at = 0;
   var ch = json[at];
@@ -13,7 +14,6 @@ var parseJSON = function parseJSON(json) {
     '\n': '\n',
     '"': '"'
   };
-
   var next = function next(c) {
     if (at < json.length) {
       at++;
@@ -48,7 +48,8 @@ var parseJSON = function parseJSON(json) {
       }
       throw new SyntaxError('Array closure missing.', 'parseJSON.js', 32);
   };
-
+  // I feel like this function should call next before returning
+  // However that is currently breaking things, so will save for refactor.
   var parseString = function parseString() {
     var result = '';
     if (ch === '"') {
@@ -116,7 +117,6 @@ var parseJSON = function parseJSON(json) {
       }
     }
   };
-
   var parseNumber = function parseNumber() {
     var result = '';
     while (ch === '-' || ch === '.' || (ch >= 0 && ch <= 9)) {
@@ -128,7 +128,6 @@ var parseJSON = function parseJSON(json) {
     }
     return +result;
   };
-
   var parse = function parse() {
     while (at < json.length) {
       if (ch === ',') {
@@ -149,6 +148,5 @@ var parseJSON = function parseJSON(json) {
       next();
     }
   };
-
   return parse();
 };
