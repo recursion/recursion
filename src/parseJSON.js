@@ -3,7 +3,6 @@
 
 // but you're not, so you'll write it from scratch:
 var parseJSON = function parseJSON(json) {
-  // console.log('parseJSON called with: ' + json);
   var at = 0;
   var ch = json[at];
   var escapeChars = {
@@ -26,21 +25,23 @@ var parseJSON = function parseJSON(json) {
   };
   var parseArray = function parseArray() {
       var result = [];
+      var tmp;
       if (ch === '[') {
         while (at < json.length) {
           next();
           parseWhiteSpace();
           if (ch === ']') {
             return result;
-          } else if (ch === '"') {
+          }
+          if (ch === '"') {
             result.push(parse(json.slice(at)));
           } else {
-            var tmp = parse(json.slice(at));
+            tmp = parse(json.slice(at));
             if (tmp !== undefined) {
               result.push(tmp);
             }
           }
-          if (ch === ']' && json.charAt(at + 1) !== ',') {
+          if (ch === ']') {
             return result;
           }
         }
@@ -79,22 +80,18 @@ var parseJSON = function parseJSON(json) {
       while (at < json.length) {
         next();
         parseWhiteSpace();
-        if (ch === '}') {
-          return result;
-        } else if (ch === ':') {
+        if (ch === ':') {
           next();
           parseWhiteSpace();
           var tmp = parse(json.slice(at));
           if (tmp !== undefined) {
             result[prop] = tmp;
           }
-        } else {
+        } else if (ch === '"') {
           prop = parseString();
         }
-        // here is my problem - this allows most tests to pass
-        // but not the final object glob, which ends up having one property
-        // not properly return because its inner object is followed by a ,
-        if (ch === '}' && json.charAt(at + 1) !== ',') {
+        if (ch === '}') {
+          next();
           return result;
         }
       }
